@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
 import Cookies from "js-cookie";
 
-export const socket = io("http://localhost:5000", {
+export const socket = io("https://chatappbacknewv2.adaptable.app/", {
   query: { token: Cookies.get("token") },
 });
 

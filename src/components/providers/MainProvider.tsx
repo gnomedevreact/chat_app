@@ -12,6 +12,12 @@ export const MainProvider = ({ children }: { children: React.ReactNode }) => {
   const { replace } = useRouter();
 
   useEffect(() => {
+    if (pathname === "/auth") {
+      SocketService.disconnect();
+    }
+  }, []);
+
+  useEffect(() => {
     if (Object.keys(user).length !== 0) {
       SocketService.connect();
     }
