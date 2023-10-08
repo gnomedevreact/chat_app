@@ -8,7 +8,7 @@ import {
 import { useGetChat } from "@/hooks/useGetChat";
 import { useGetUser } from "@/hooks/useGetUser";
 import { useSendMessage } from "@/hooks/useSendMessage";
-import { socket } from "@/services/socket.service";
+import SocketService from "@/services/socket.service";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -32,7 +32,7 @@ export const Chat = () => {
   const { back } = useRouter();
 
   useEffect(() => {
-    socket.on(
+    SocketService.on(
       "onlineUsersList",
       (
         data: Array<{
@@ -48,14 +48,14 @@ export const Chat = () => {
         setUsersList(online_users);
       }
     );
-    socket.on("newPrivateMessage", (data) => {
+    SocketService.on("newPrivateMessage", (data) => {
       console.log(data);
       setMessagesList((prevValue) => [...prevValue, data]);
     });
 
     return () => {
-      socket.off("onlineUsersList");
-      socket.off("newPrivateMessage");
+      SocketService.off("onlineUsersList");
+      SocketService.off("newPrivateMessage");
     };
   }, []);
 
@@ -89,7 +89,7 @@ export const Chat = () => {
           .length > 0;
 
       if (isOnline) {
-        socket.emit("privateMessage", {
+        SocketService.emitEvent("privateMessage", {
           message: data.message,
           recipient_id: dif_user_id,
           recipientSocketId: usersList[0].socketId,

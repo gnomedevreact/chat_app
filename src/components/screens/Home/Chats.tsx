@@ -8,7 +8,6 @@ import {
 import { GENERAL_HELPERS } from "@/helpers/general.helpers";
 import { useGetUser } from "@/hooks/useGetUser";
 import { useSearchUser } from "@/hooks/useSearchUser";
-import { SocketService, socket } from "@/services/socket.service";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
