@@ -9,6 +9,7 @@ import { GENERAL_HELPERS } from "@/helpers/general.helpers";
 import { useGetUser } from "@/hooks/useGetUser";
 import { useSearchUser } from "@/hooks/useSearchUser";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
@@ -22,6 +23,7 @@ export const Chats = () => {
   const { setChatId } = useChatInfoStore();
   const { register, handleSubmit, reset } = useForm<IFormProps>();
   const [searchUserEmail, setSearchUserEmail] = useState("");
+  const { push } = useRouter();
   useSearchUser(searchUserEmail);
 
   if (isLoading) return null;
@@ -52,17 +54,15 @@ export const Chats = () => {
       </form>
       <ul>
         {user_info?.chats.map((chat) => (
-          <Link
+          <li
+            className="w-full px-2 py-3 text-lg font-normal text-darkGreen border-b-2 border-normalGreen"
             key={chat.id}
-            href={"/chat"}
-            onClick={() => handleSaveChatId(chat.id)}
+            onClick={() => push("/chat")}
           >
-            <li className="w-full px-2 py-3 text-lg font-normal text-darkGreen border-b-2 border-normalGreen">
-              {chat.messages.length > 0
-                ? chat.messages[chat.messages.length - 1].message
-                : chat.id}
-            </li>
-          </Link>
+            {chat.messages.length > 0
+              ? chat.messages[chat.messages.length - 1].message
+              : chat.id}
+          </li>
         ))}
       </ul>
     </div>
