@@ -30,6 +30,7 @@ export const Chats = () => {
 
   const handleSaveChatId = (id: string) => {
     setChatId(id);
+    push("/chat");
   };
 
   const submit: SubmitHandler<IFormProps> = (data) => {
@@ -57,7 +58,7 @@ export const Chats = () => {
           <li
             className="w-full px-2 py-3 text-lg font-normal text-darkGreen border-b-2 border-normalGreen"
             key={chat.id}
-            onClick={() => push("/chat")}
+            onClick={() => handleSaveChatId(chat.id)}
           >
             {chat.messages.length > 0
               ? chat.messages[chat.messages.length - 1].message
