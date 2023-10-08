@@ -56,7 +56,7 @@ export const Chats = () => {
           <Link
             key={chat.id}
             href={"/chat/room"}
-            onClick={() => handleSaveChatId(chat.id)}
+            // onClick={() => handleSaveChatId(chat.id)}
           >
             <li className="w-full px-2 py-3 text-lg font-normal text-darkGreen border-b-2 border-normalGreen">
               {chat.messages.length > 0

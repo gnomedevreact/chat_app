@@ -17,13 +17,17 @@ export const Chat = () => {
   const user = useAuthStore((state) => state.user);
   const { chat_id } = useChatInfoStore();
   const { currentChat, isLoading } = useGetChat(chat_id);
-  const [messagesList, setMessagesList] = useState<Array<{ message: string }>>(
-    []
-  );
+  const [messagesList, setMessagesList] = useState<
+    Array<{ message: string; sender_id: string; from_id: string }>
+  >([]);
   const [usersList, setUsersList] = useState<
     Array<{ user_id: string; socketId: string; name: string; surname: string }>
   >([]);
-  const { register, handleSubmit, reset } = useForm<{ message: string }>();
+  const { register, handleSubmit, reset } = useForm<{
+    message: string;
+    sender_id: string;
+    from_id: string;
+  }>();
   const { sendMessage } = useSendMessage();
   const { back } = useRouter();
 
@@ -63,31 +67,41 @@ export const Chat = () => {
 
   if (isLoading) return null;
 
-  const submit: SubmitHandler<{ message: string }> = (data) => {
-    reset();
-    setMessagesList((prevValue) => [...prevValue, data]);
-
+  const submit: SubmitHandler<{
+    message: string;
+  }> = (data) => {
     const dif_user_id = currentChat?.userIds.filter(
       (user_id) => user_id !== user.id
     )[0];
 
-    const isOnline =
-      usersList.filter((online_user) => online_user.user_id === dif_user_id)
-        .length > 0;
-
-    if (isOnline) {
-      socket.emit("privateMessage", {
+    if (dif_user_id) {
+      const new_message = {
         message: data.message,
-        recipient_id: dif_user_id,
-        recipientSocketId: usersList[0].socketId,
-      });
-    } else {
-      sendMessage({
-        message: data.message,
-        chat_id,
+        sender_id: dif_user_id,
         from_id: user.id,
-        to_id: dif_user_id,
-      });
+      };
+
+      reset();
+      setMessagesList((prevValue) => [...prevValue, new_message]);
+
+      const isOnline =
+        usersList.filter((online_user) => online_user.user_id === dif_user_id)
+          .length > 0;
+
+      if (isOnline) {
+        socket.emit("privateMessage", {
+          message: data.message,
+          recipient_id: dif_user_id,
+          recipientSocketId: usersList[0].socketId,
+        });
+      } else {
+        sendMessage({
+          message: data.message,
+          chat_id,
+          from_id: user.id,
+          to_id: dif_user_id,
+        });
+      }
     }
   };
 
@@ -96,10 +110,24 @@ export const Chat = () => {
       <button className="text-white bg-blue p-2 mb-10" onClick={() => back()}>
         Back
       </button>
-      <ul>
-        {messagesList.map((message, index) => (
-          <li key={index}>{message.message}</li>
-        ))}
+      <ul className="flex flex-col gap-[15px] max-h-[600px] overflow-y-auto px-4">
+        {messagesList.map((message, index) =>
+          message.from_id === user.id ? (
+            <li
+              key={index}
+              className="bg-blue py-2 px-4 text-white max-w-[50%] self-end"
+            >
+              {message.message}
+            </li>
+          ) : (
+            <li
+              key={index}
+              className="bg-darkGreen py-2 px-4 text-white max-w-[50%] self-start"
+            >
+              {message.message}
+            </li>
+          )
+        )}
       </ul>
       <form onSubmit={handleSubmit(submit)}>
         <input

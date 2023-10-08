@@ -42,13 +42,15 @@ export const useChatStore = create<IChatStore>()(
 );
 
 export const useChatInfoStore = create<IChatInfoStore>()(
-  persist(
-    (set) => ({
-      chat_id: "",
-      setChatId: (chat_id) => set({ chat_id }),
-    }),
-    {
-      name: "chat_id",
-    }
+  devtools(
+    persist(
+      (set) => ({
+        chat_id: "",
+        setChatId: (chat_id) => set({ chat_id }),
+      }),
+      {
+        name: "chat_id",
+      }
+    )
   )
 );

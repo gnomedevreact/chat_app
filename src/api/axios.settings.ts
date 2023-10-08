@@ -2,7 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 const axiosRequest = axios.create({
-  baseURL: "https://chat-app-three-swart.vercel.app/",
+  baseURL: process.env.APP_MODE ? process.env.APP_DEV : process.env.APP_PROD,
   headers: {
     "Content-Type": "application/json",
   },
