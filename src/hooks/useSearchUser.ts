@@ -17,7 +17,7 @@ export const useSearchUser = (email: string) => {
     {
       onSuccess({ data }) {
         setChatId(data.id);
-        push("/chat/room");
+        push("/chat");
       },
     }
   );
