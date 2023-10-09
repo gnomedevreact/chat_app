@@ -14,6 +14,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <script
+          data-project-id="JmV61jJDiePsc2r0wZYRRR0ZGrzwsicox6YCwBdy"
+          src="https://snippet.meticulous.ai/v1/meticulous.js"
+        />
+      </head>
       <body>
         <MainProvider>{children}</MainProvider>
       </body>
